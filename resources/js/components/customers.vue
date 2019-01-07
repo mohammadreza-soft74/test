@@ -20,18 +20,23 @@
             <tr>
                     <th>name</th>
                     <th>email</th>
+                    <th>&#9587&#9587&#9587&#9587&#9587&#9587&#9587&#9587</th>
             </tr>
         </thead>
 
         <tbody>
             <tr v-for="customer in customers">
                 <td>
-                    <input type="text" class="form-control" v-if="edit">
+                    <input type="text" class="form-control"  v-if="customer.id == clickedId && edit">
                     <span v-else>{{customer.name}}</span>
                 </td>
-                <td>{{customer.email}}</td>
                 <td>
-                    <button type="button" class="btn btn-info btn-xs" v-if="!edit" v-on:click="">edit</button>
+                    <input type="text" class="form-control" v-if="customer.id == clickedId && edit">
+                    <span v-else>{{customer.email}}</span>
+                </td>
+                <td>
+                    <button :id="customer.id"  name="add" type="button" class="btn btn-info btn-xs" v-if="!edit" v-on:click="formEdit(customer.id)">edit</button>
+                    <button type="button" class="btn btn-danger btn-xs" v-if="edit" v-on:click="cancelEdit">Cancel</button>
                     <button type="button" class="btn btn-danger btn-xs" v-if="!edit">Delete</button>
 
                 </td>
@@ -47,7 +52,7 @@
 
     export default {
 
-        components:{},
+        props:['cutomer'],
         data()
         {
             return{
@@ -56,6 +61,7 @@
                 uemail:'',
                 customers:[],
                 edit:false,
+                clickedId: null
             }
         },
 
@@ -65,7 +71,8 @@
         methods:{
             fetchCustomers(){
                 axios.get("customer").then(response=>{this.customers = response.data.customers});
-                console.log("fetch");
+                console.log('fetch');
+
             },
             createCustomer(){
                 console.log("create function");
@@ -82,6 +89,17 @@
                 }).then(this.fetchCustomers());
 
 
+            },
+            formEdit(id){
+                this.edit=true;
+                this.clickedId = id;
+
+
+            },
+            cancelEdit(){
+                this.edit=false;
+                this.name='';
+                this.email=''
             }
         }
     }

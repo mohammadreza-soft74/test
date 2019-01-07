@@ -1925,14 +1925,20 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  components: {},
+  props: ['cutomer'],
   data: function data() {
     return {
       uname: '',
       uemail: '',
       customers: [],
-      edit: false
+      edit: false,
+      clickedId: null
     };
   },
   created: function created() {
@@ -1945,7 +1951,7 @@ __webpack_require__.r(__webpack_exports__);
       axios.get("customer").then(function (response) {
         _this.customers = response.data.customers;
       });
-      console.log("fetch");
+      console.log('fetch');
     },
     createCustomer: function createCustomer() {
       console.log("create function");
@@ -1955,6 +1961,15 @@ __webpack_require__.r(__webpack_exports__);
       }).catch(function (error) {
         console.log(error.response);
       }).then(this.fetchCustomers());
+    },
+    formEdit: function formEdit(id) {
+      this.edit = true;
+      this.clickedId = id;
+    },
+    cancelEdit: function cancelEdit() {
+      this.edit = false;
+      this.name = '';
+      this.email = '';
     }
   }
 });
@@ -37143,7 +37158,7 @@ var render = function() {
           _vm._l(_vm.customers, function(customer) {
             return _c("tr", [
               _c("td", [
-                _vm.edit
+                customer.id == _vm.clickedId && _vm.edit
                   ? _c("input", {
                       staticClass: "form-control",
                       attrs: { type: "text" }
@@ -37151,7 +37166,14 @@ var render = function() {
                   : _c("span", [_vm._v(_vm._s(customer.name))])
               ]),
               _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(customer.email))]),
+              _c("td", [
+                customer.id == _vm.clickedId && _vm.edit
+                  ? _c("input", {
+                      staticClass: "form-control",
+                      attrs: { type: "text" }
+                    })
+                  : _c("span", [_vm._v(_vm._s(customer.email))])
+              ]),
               _vm._v(" "),
               _c("td", [
                 !_vm.edit
@@ -37159,10 +37181,26 @@ var render = function() {
                       "button",
                       {
                         staticClass: "btn btn-info btn-xs",
-                        attrs: { type: "button" },
-                        on: { click: function($event) {} }
+                        attrs: { id: customer.id, name: "add", type: "button" },
+                        on: {
+                          click: function($event) {
+                            _vm.formEdit(customer.id)
+                          }
+                        }
                       },
                       [_vm._v("edit")]
+                    )
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.edit
+                  ? _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-danger btn-xs",
+                        attrs: { type: "button" },
+                        on: { click: _vm.cancelEdit }
+                      },
+                      [_vm._v("Cancel")]
                     )
                   : _vm._e(),
                 _vm._v(" "),
@@ -37205,7 +37243,9 @@ var staticRenderFns = [
       _c("tr", [
         _c("th", [_vm._v("name")]),
         _vm._v(" "),
-        _c("th", [_vm._v("email")])
+        _c("th", [_vm._v("email")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("╳╳╳╳╳╳╳╳")])
       ])
     ])
   }
